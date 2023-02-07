@@ -11,6 +11,8 @@ const numeralValues = [
 
 const romanCharacters = /^[MDCLXVI]+/;
 
+/* This pattern also allows an empty string, but the one above doesn't*/
+
 const romanForm = /^M{0,3}(C(M|D)|D?C{0,3})?(X(C|L)|L?X{0,3})?(I(X|V)|V?I{0,3})?$/;
 
 const numeralValueTable = new Map(numeralValues);
@@ -31,19 +33,20 @@ export const romanToDecimal = (string) => {
     }
 }
 
-const convertLetters = (letters) => { 
-    return letters.map((letter) => (numeralValueTable.get(letter)))
-};
+const convertLetters = (letters) => (
+    letters.map((letter) => (numeralValueTable.get(letter)))
+);
 
-const invertValues = (values) => { 
-    return values.map((value,index,original) => {
-        return (((original.length - index) > 1 && value < original[(index + 1)]) ? -value : value);
-    }
-)}
+/* Once you get the default values,
+the quirk of the Roman notation comes down to whether next character is worth more, or not. */
 
-const sumValue = (values) => { 
-    return values.reduce((total,value) => total += value, 0)
-};
+const invertValues = (values) => (
+    values.map((value,index,original) => (
+        ((original.length - index) > 1 && value < original[(index + 1)]) ? -value : value
+    )
+))
+
+const sumValue = (values) => (values.reduce((total,value) => total += value, 0));
 
 export const decimalToRoman = (number) => {
     if(number === null) { throw(new Error("No input provided"))}
@@ -52,7 +55,7 @@ export const decimalToRoman = (number) => {
     else if(!Number.isInteger(number)) { throw(new Error("Roman numeral conversion is only defined for whole numbers"))}
     else {
         const digits = String(number).split("");
-        return convertDigits(digits.reverse());
+        return convertDigits(digits);
     }
 }
 
@@ -70,9 +73,12 @@ const convertDigit = (digit,multiplier) => {
     }
 }
 
-const convertDigits = (digits) => { 
-    return digits.reduce((numeralString, digit, index) => {
-        return convertDigit(digit, 10**index) + numeralString;
-    }, "")
-}
+/* If the conversion goes from the left on a reversed list, you can use the positional index to
+give the power of 10 required for the multiplier (then build the string from the front). With
+reduceRight, it was too difficult to work out the decimal place. */
+
+const convertDigits = (digits) => 
+    digits.reverse().reduce((numeralString, digit, index) =>
+        (convertDigit(digit, 10**index) + numeralString), "")
+
 
