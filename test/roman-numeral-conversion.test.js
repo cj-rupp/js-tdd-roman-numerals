@@ -1,5 +1,5 @@
-import { romanToDecimal /* , decimalToRoman */ } from "../src/roman-numeral-conversion";
-import { /* romanToDecimal, */ decimalToRoman } from "../src/roman-numeral-conversion-alternate";
+import { /* romanToDecimal , decimalToRoman */ } from "../src/roman-numeral-conversion";
+import { romanToDecimal, decimalToRoman } from "../src/roman-numeral-conversion-alternate";
 
 const squares = [
     ["I",1],
