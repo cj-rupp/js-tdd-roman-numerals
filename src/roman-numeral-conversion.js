@@ -40,11 +40,12 @@ const convertLetters = (letters) => (
 /* Once you get the default values,
 the quirk of the Roman notation comes down to whether next character is worth more, or not. */
 
-const invertValues = (values) => (
-    values.map((value,index,original) => (
-        ((original.length - index) > 1 && value < original[(index + 1)]) ? -value : value
-    )
-))
+const invertValues = (values) => {
+    const lastValueIndex = values.length - 1;
+    return values.map((value,index,original) => (
+        ((index < lastValueIndex && value < original[(index + 1)]) ? -value : value
+    )));
+}
 
 const sumValue = (values) => (values.reduce((total,value) => total += value, 0));
 
